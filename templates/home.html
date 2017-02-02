@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="text-center">
+            MISSION ELAPSED TIME: <div id="met"></div>
+            <br>
+            ALTITUDE: <div id="altitude"></div>
+            <br>
+            APOAPSIS: <div id="apoapsis"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script>
+        window.onload = function() {
+            $.ajax({
+                url: '/krpc/telem',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data.ut, data.altitude, data.apoapsis);
+                },
+                error: function(jqXHR, code, err) {
+                    console.log(jqXHR, code, err);
+                }
+            });
+        }
+
+        $('document').ready(function() {
+            setInterval(function() {
+                $.ajax({
+                    url: '/krpc/telem',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#met').html(data.met);
+                        $('#altitude').html(data.altitude);
+                        $('#apoapsis').html(data.apoapsis);
+                    },
+                    error: function(jqXHR, code, err) {
+                        console.log(jqXHR, code, err);
+                    }
+                });
+            }, 1000);
+        })
+    </script>
+
+</body>
+</html>

@@ -7,13 +7,17 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="container" style="margin-top: 2em;">
         <div class="text-center">
             MISSION ELAPSED TIME: <div id="met"></div>
             <br>
             ALTITUDE: <div id="altitude"></div>
             <br>
             APOAPSIS: <div id="apoapsis"></div>
+            <hr>
+            <button id="btnLaunch" class="btn btn-primary btn-lg btn-block">
+                LAUNCH!
+            </button>
         </div>
     </div>
 
@@ -21,22 +25,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
     <script>
-        window.onload = function() {
-            $.ajax({
-                url: '/krpc/telem',
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data.ut, data.altitude, data.apoapsis);
-                },
-                error: function(jqXHR, code, err) {
-                    console.log(jqXHR, code, err);
-                }
-            });
-        }
 
         $('document').ready(function() {
             setInterval(function() {
                 $.ajax({
+                    type: 'get',
                     url: '/krpc/telem',
                     dataType: 'json',
                     success: function(data) {
@@ -50,6 +43,18 @@
                 });
             }, 1000);
         })
+
+        $('#btnLaunch').click(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'krpc/launch',
+                success: function(data) {
+                    if (data.status === "go")
+                        console.log("LAUNCH!");
+                }
+            })
+        });
+
     </script>
 
 </body>

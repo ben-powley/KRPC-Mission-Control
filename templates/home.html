@@ -29,7 +29,7 @@
         $('document').ready(function() {
             setInterval(function() {
                 $.ajax({
-                    type: 'get',
+                    type: 'GET',
                     url: '/krpc/telem',
                     dataType: 'json',
                     success: function(data) {

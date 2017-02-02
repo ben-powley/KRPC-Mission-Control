@@ -14,6 +14,12 @@ met = conn.add_stream(getattr, vessel, 'met')
 altitude = conn.add_stream(getattr, vessel.flight(), 'mean_altitude')
 apoapsis = conn.add_stream(getattr, vessel.orbit, 'apoapsis_altitude')
 
+def launch():
+    vessel.auto_pilot.target_pitch_and_heading(90, 90)
+    vessel.auto_pilot.engage()
+    vessel.control.throttle = 1
+    vessel.control.activate_next_stage()
+
 #Flask Config
 
 app = Flask(__name__)
@@ -30,9 +36,6 @@ def krpc__telem():
 @app.route('/krpc/launch', methods=['GET'])
 def krpc__launch():
     if request.method == 'GET':
-        vessel.auto_pilot.target_pitch_and_heading(90, 90)
-        vessel.auto_pilot.engage()
-        vessel.control.throttle = 1
-        vessel.control.activate_next_stage()
+        launch()
 
         return jsonify(status='go')

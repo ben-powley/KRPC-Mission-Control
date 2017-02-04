@@ -8,24 +8,41 @@
 <body>
 
     <div class="container" style="margin-top: 2em;">
+        <div class="row">
+            <div class="col">
+                <div id="altitudeGraph"></div>
+            </div>
+        </div>
+        <hr>
         <div class="text-center">
-            MISSION ELAPSED TIME: <div id="met"></div>
+            <strong>MISSION TIME</strong> <div id="met"></div>
             <br>
-            ALTITUDE: <div id="altitude"></div>
+            <strong>ALTITUDE</strong> <div id="altitude"></div>
             <br>
-            APOAPSIS: <div id="apoapsis"></div>
-            <hr>
-            <button id="btnLaunch" class="btn btn-primary btn-lg btn-block">
-                LAUNCH!
-            </button>
+            <strong>SPEED</strong> <div id="speed"></div>
+            <br>
+            <strong>APOAPSIS</strong> <div id="apoapsis"></div>
+            <br>
+            <strong>PERIAPSIS</strong> <div id="periapsis"></div>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
 
+        var x = [];
+        var y = [];
+        var layout = {
+            xaxis: {title: "Mission Time (s)"},
+            yaxis: {title: "Altitude (m)"},
+            margin: {t: 20}
+        }
+
+        var met;
+        
         $('document').ready(function() {
             setInterval(function() {
                 $.ajax({
@@ -35,25 +52,27 @@
                     success: function(data) {
                         $('#met').html(data.met);
                         $('#altitude').html(data.altitude);
+                        $('#speed').html(data.speed);
                         $('#apoapsis').html(data.apoapsis);
+                        $('#periapsis').html(data.periapsis);
+
+                        met = data.met;
+                        x.push(data.met);
+                        y.push(data.altitude); 
                     },
                     error: function(jqXHR, code, err) {
                         console.log(jqXHR, code, err);
                     }
                 });
+
+                if (parseInt(met) > 0) {
+                    var plot = {x, y, type: 'lines'};
+                    var dataPlot = [plot];
+
+                    Plotly.newPlot('altitudeGraph', dataPlot, layout);
+                }
             }, 1000);
         })
-
-        $('#btnLaunch').click(function() {
-            $.ajax({
-                type: 'GET',
-                url: 'krpc/launch',
-                success: function(data) {
-                    if (data.status === "go")
-                        console.log("LAUNCH!");
-                }
-            })
-        });
 
     </script>
 

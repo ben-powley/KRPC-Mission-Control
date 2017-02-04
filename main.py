@@ -4,21 +4,20 @@ import krpc
 
 #KRPC Config
 
-conn = krpc.connect(name='KRPC')
+conn = krpc.connect(name='KRPC - TELEMETRY DISPLAY')
+
 print('CONNECTED TO SPACE CENTER')
 
 vessel = conn.space_center.active_vessel
 ref_frame = vessel.orbit.body.reference_frame
 
+print("CONNECTED TO VESSEL: " + vessel.name)
+
 met = conn.add_stream(getattr, vessel, 'met')
 altitude = conn.add_stream(getattr, vessel.flight(), 'mean_altitude')
+speed = conn.add_stream(getattr, vessel.flight(ref_frame), 'speed')
 apoapsis = conn.add_stream(getattr, vessel.orbit, 'apoapsis_altitude')
-
-def launch():
-    vessel.auto_pilot.target_pitch_and_heading(90, 90)
-    vessel.auto_pilot.engage()
-    vessel.control.throttle = 1
-    vessel.control.activate_next_stage()
+periapsis = conn.add_stream(getattr, vessel.orbit, 'periapsis_altitude')
 
 #Flask Config
 
@@ -31,11 +30,5 @@ def index():
 @app.route('/krpc/telem', methods=['GET'])
 def krpc__telem():
     if request.method == 'GET':
-        return jsonify(met=round(met()), altitude=round(altitude()), apoapsis=round(apoapsis()))
+        return jsonify(met=round(met()), altitude=round(altitude()), speed=round(speed()), apoapsis=round(apoapsis()), periapsis=round(periapsis()))
 
-@app.route('/krpc/launch', methods=['GET'])
-def krpc__launch():
-    if request.method == 'GET':
-        launch()
-
-        return jsonify(status='go')

@@ -46,10 +46,18 @@
                         <br>
                         <div class="row">
                             <div class="col">
+                                <strong>MISSION TIME </strong>
+                            </div>
+                            <div class="col">
+                                <span id="met">0</span> s
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <strong>SPEED </strong>
                             </div>
                             <div class="col">
-                                <div id="speed"></div> m/s
+                                <span id="speed"></span> m/s
                             </div>
                         </div>
                         <div class="row">
@@ -57,7 +65,7 @@
                                 <strong>ALTITUDE </strong>
                             </div>
                             <div class="col">
-                                <div id="altitude"></div> m
+                                <span id="altitude"></span> m
                             </div>
                         </div>
                         <div class="row">
@@ -65,7 +73,7 @@
                                 <strong>APOAPSIS </strong>
                             </div>
                             <div class="col">
-                                <div id="apoapsis"></div> m
+                                <span id="apoapsis"></span> m
                             </div>
                         </div>
                         <div class="row">
@@ -73,12 +81,16 @@
                                 <strong>PERIAPSIS </strong>
                             </div>
                             <div class="col">
-                                <div id="periapsis"></div> m
+                                <span id="periapsis"></span> m
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <br>
+        <div class="text-center">
+            <button id="btnConnect" class="btn btn-primary">CONNECT</button>
         </div>
     </div>
 
@@ -98,6 +110,10 @@
 
         var name;
         var met;
+        var altitude;
+        var speed;
+        var apoapsis;
+        var periapsis;
 
         $('document').ready(function() {
             setInterval(function() {
@@ -106,14 +122,20 @@
                     url: '/krpc/telem',
                     dataType: 'json',
                     success: function(data) {
-                        $('#name').html(data.vessel_name);
-                        $('#met').html(data.met);
-                        $('#altitude').html(data.altitude);
-                        $('#speed').html(data.speed);
-                        $('#apoapsis').html(data.apoapsis);
-                        $('#periapsis').html(data.periapsis);
-
+                        name = data.vessel_name;
                         met = data.met;
+                        altitude = data.altitude;
+                        speed = data.speed;
+                        apoapsis = data.apoapsis;
+                        periapsis = data.periapsis;
+
+                        $('#name').html(name);
+                        $('#met').html(met);
+                        $('#altitude').html(altitude);
+                        $('#speed').html(speed);
+                        $('#apoapsis').html(apoapsis);
+                        $('#periapsis').html(periapsis);
+
                         x.push(data.met);
                         y.push(data.altitude);
                     },
@@ -121,14 +143,16 @@
                         console.log(jqXHR, code, err);
                     }
                 });
+            }, 500);
 
+            setInterval(function() {
                 if (parseInt(met) > 0) {
                     var plot = {x, y, type: 'lines'};
                     var dataPlot = [plot];
 
                     Plotly.newPlot('altitudeGraph', dataPlot, layout);
                 }
-            }, 500);
+            }, 1000);
         })
 
     </script>

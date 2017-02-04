@@ -2,30 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Flask</title>
+    <title>MISSION CONTROL</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
 </head>
+<style>
+    body {
+        padding-top: 20px;
+        background: black;
+        color: white;
+    }
+
+    .col {
+        border: 1px solid white;
+        padding: 1.5em;
+        text-align: center;
+    }
+</style>
 <body>
 
-    <div class="container" style="margin-top: 2em;">
+    <div class="container-fluid text-center">
+        <h1><span id="name"></div></h1>
+        <hr>
+    </div>
+
+    <br>
+
+    <div class="container-fluid">
         <div class="row">
             <div class="col">
-                <div id="altitudeGraph"></div>
+                <div class="">
+                    <div id="altitudeGraph"></div>
+                </div>
             </div>
-        </div>
-        <hr>
-        <div class="text-center">
-            <strong>NAME</strong> <div id="name"></div>
+
             <br>
-            <strong>MISSION TIME</strong> <div id="met"></div>
-            <br>
-            <strong>ALTITUDE</strong> <div id="altitude"></div>
-            <br>
-            <strong>SPEED</strong> <div id="speed"></div>
-            <br>
-            <strong>APOAPSIS</strong> <div id="apoapsis"></div>
-            <br>
-            <strong>PERIAPSIS</strong> <div id="periapsis"></div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <div class="text-center">
+                            <h2>FLIGHT INFORMATION</h2>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <strong>SPEED </strong>
+                            </div>
+                            <div class="col">
+                                <div id="speed"></div> m/s
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <strong>ALTITUDE </strong>
+                            </div>
+                            <div class="col">
+                                <div id="altitude"></div> m
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <strong>APOAPSIS </strong>
+                            </div>
+                            <div class="col">
+                                <div id="apoapsis"></div> m
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <strong>PERIAPSIS </strong>
+                            </div>
+                            <div class="col">
+                                <div id="periapsis"></div> m
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -75,7 +128,7 @@
 
                     Plotly.newPlot('altitudeGraph', dataPlot, layout);
                 }
-            }, 1000);
+            }, 500);
         })
 
     </script>

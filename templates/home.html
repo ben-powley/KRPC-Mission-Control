@@ -15,6 +15,8 @@
         </div>
         <hr>
         <div class="text-center">
+            <strong>NAME</strong> <div id="name"></div>
+            <br>
             <strong>MISSION TIME</strong> <div id="met"></div>
             <br>
             <strong>ALTITUDE</strong> <div id="altitude"></div>
@@ -41,8 +43,9 @@
             margin: {t: 20}
         }
 
+        var name;
         var met;
-        
+
         $('document').ready(function() {
             setInterval(function() {
                 $.ajax({
@@ -50,6 +53,7 @@
                     url: '/krpc/telem',
                     dataType: 'json',
                     success: function(data) {
+                        $('#name').html(data.vessel_name);
                         $('#met').html(data.met);
                         $('#altitude').html(data.altitude);
                         $('#speed').html(data.speed);
@@ -58,7 +62,7 @@
 
                         met = data.met;
                         x.push(data.met);
-                        y.push(data.altitude); 
+                        y.push(data.altitude);
                     },
                     error: function(jqXHR, code, err) {
                         console.log(jqXHR, code, err);

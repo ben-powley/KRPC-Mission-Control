@@ -6,12 +6,10 @@ import krpc
 
 conn = krpc.connect(name='KRPC - TELEMETRY DISPLAY')
 
-print('CONNECTED TO SPACE CENTER')
-
 vessel = conn.space_center.active_vessel
 ref_frame = vessel.orbit.body.reference_frame
 
-print("CONNECTED TO VESSEL: " + vessel.name)
+name = vessel.name
 
 met = conn.add_stream(getattr, vessel, 'met')
 altitude = conn.add_stream(getattr, vessel.flight(), 'mean_altitude')
@@ -30,5 +28,4 @@ def index():
 @app.route('/krpc/telem', methods=['GET'])
 def krpc__telem():
     if request.method == 'GET':
-        return jsonify(met=round(met()), altitude=round(altitude()), speed=round(speed()), apoapsis=round(apoapsis()), periapsis=round(periapsis()))
-
+        return jsonify(vessel_name=name, met=round(met()), altitude=round(altitude()), speed=round(speed()), apoapsis=round(apoapsis()), periapsis=round(periapsis()))
